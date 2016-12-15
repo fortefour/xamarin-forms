@@ -418,7 +418,15 @@ namespace Xamarin.Forms.Platform.iOS
 		{
 			var tcs = new TaskCompletionSource<bool>();
 
-			var parentViewController = Platform.GetRenderer(page).ViewController.ParentViewController as ParentingViewController;
+            var renderer = Platform.GetRenderer(page);
+            if (renderer == null)
+                throw new NotSupportedException("Page has no attached renderer.");
+
+            var viewController = renderer.ViewController;
+            if (viewController == null)
+                throw new NotSupportedException("Renderer has no view controller.");
+
+            var parentViewController = viewController.ParentViewController as ParentingViewController;
 			if (parentViewController == null)
 				throw new NotSupportedException("ParentingViewController parent could not be found. Please file a bug.");
 
